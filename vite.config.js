@@ -4,5 +4,5 @@ import react from '@vitejs/plugin-react-swc'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-    base:"https://ivoryredgrave.github.io/rickAndMortyApp"
+    base:"https://ivoryredgrave.github.io/rickandmortyapp"
 })
