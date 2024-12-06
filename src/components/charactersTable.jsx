@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { todosPersonajes } from "../funciones/funciones";
+import { fetchAllCharacters } from "../API/fetchCharacters";
 import { Table, Typography, Image, Input, Button, Space } from "antd";
 import { SearchOutlined, HeartOutlined } from "@ant-design/icons";
 
-const columnas = [
+const columns = [
   {
     title: "ID",
     dataIndex: "id",
     key: "id",
   },
   {
-    title: "Imagen",
+    title: "Image",
     dataIndex: "image",
     key: "image",
     render: (image) => <Image alt="" src={image} />,
   },
   {
-    title: "Nombre",
+    title: "Name",
     dataIndex: "name",
     key: "name",
     filterDropdown: ({
@@ -37,7 +37,7 @@ const columnas = [
           <Space>
             <Input
               autoFocus
-              placeholder="Buscar por nombre"
+              placeholder="Search by name"
               value={selectedKeys[0]}
               onChange={(e) => {
                 setSelectedKeys(e.target.value ? [e.target.value] : []);
@@ -58,7 +58,7 @@ const columnas = [
               }}
               type="danger"
             >
-              Reiniciar
+              Reset
             </Button>
           </Space>
         </div>
@@ -72,58 +72,70 @@ const columnas = [
     },
   },
   {
-    title: "Estado",
+    title: "Status",
     dataIndex: "status",
     key: "status",
   },
   {
-    title: "Especie",
+    title: "Species",
     dataIndex: "species",
     key: "species",
   },
   {
-    title: "Género",
+    title: "Gender",
     key: "gender",
     dataIndex: "gender",
   },
   {
-    title: "Tipo",
+    title: "Type",
     dataIndex: "type",
     key: "type",
   },
 ];
 
-const TablaPersonajes = () => {
-  const [personajes, setPersonajes] = useState([]);
+const { Title } = Typography;
+
+const CharactersTable = () => {
+  const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { Title } = Typography;
 
   useEffect(() => {
-    todosPersonajes((data) => {
-      setPersonajes(data); //
-      setLoading(false);
-    });
+    const fetchData = async () => {
+      try {
+        const data = await fetchAllCharacters();
+        setCharacters(data);
+      } catch (error) {
+        console.error("Error fetching characters:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
   }, []);
 
   return (
     <>
       <Table
-        columns={columnas}
-        dataSource={personajes}
+        columns={columns}
+        dataSource={characters}
         pagination={{
           position: ["topRight"],
         }}
         bordered
         rowKey={"id"}
         loading={loading}
+        scroll={{ x: "max-content" }}
+        style={{ overflowX: 'auto' }} 
         title={() => (
-          <Title level={4}>
-            Personajes de Rick and Morty <HeartOutlined />
-          </Title>
+          <div style={{ textAlign: "center" }}>
+            <Title level={4}>
+              Rick and Morty Characters <HeartOutlined />
+            </Title>
+          </div>
         )}
       />
     </>
   );
 };
 
-export default TablaPersonajes;
+export default CharactersTable;

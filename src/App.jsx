@@ -1,11 +1,11 @@
 import React from 'react';
 import { ConfigProvider, theme } from 'antd';
-import TablaPersonajes from './componentes/TablaPersonajes';
+import CharactersTable from './components/charactersTable';
 
 export const App = () => {
   return (
     <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
-      <TablaPersonajes />
+      <CharactersTable />
     </ConfigProvider>
   );
 };
